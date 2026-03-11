@@ -41,6 +41,14 @@
   )
 )
 
+;; Safe Modulo
+(define-read-only (safe-mod (a uint) (b uint))
+  (begin
+    (asserts! (> b u0) err-divide-by-zero)
+    (ok (mod a b))
+  )
+)
+
 ;; Calculate Percentage
 ;; Returns (amount * percent / 100)
 (define-read-only (percentage (amount uint) (percent uint))
