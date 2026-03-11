@@ -1,12 +1,15 @@
 {
-  "name": "@stacks/clarity-toolkit",
-  "version": "1.0.0",
-  "description": "Essential utilities for Clarity smart contract development",
+  "name": "@wkalidev/stacks-clarity-toolkit",
+  "version": "1.1.0",
+  "description": "Essential utilities and helpers for Clarity smart contract development on Stacks",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "test": "clarinet test",
     "check": "clarinet check",
-    "deploy": "clarinet deploy --testnet"
+    "deploy:testnet": "clarinet deploy --testnet",
+    "deploy:mainnet": "clarinet deploy --mainnet"
   },
   "keywords": [
     "stacks",
@@ -15,7 +18,10 @@
     "utilities",
     "helpers",
     "blockchain",
-    "toolkit"
+    "toolkit",
+    "defi",
+    "web3",
+    "sip-010"
   ],
   "author": "wkalidev (zcodebase)",
   "license": "MIT",
@@ -23,7 +29,13 @@
     "type": "git",
     "url": "https://github.com/wkalidev/stacks-clarity-toolkit.git"
   },
+  "homepage": "https://base2stacks-tracker.vercel.app",
+  "dependencies": {
+    "@stacks/transactions": "^6.12.0",
+    "@stacks/network": "^6.12.0"
+  },
   "devDependencies": {
-    "clarinet": "^1.0.0"
+    "@hirosystems/clarinet-sdk": "^2.0.0",
+    "typescript": "^5.0.0"
   }
 }

@@ -6,28 +6,44 @@ Complete reference for all Stacks Clarity Toolkit functions.
 
 ## toolkit-math.clar
 
+### Error Codes
+| Code | Constant | Description |
+|------|----------|-------------|
+| `u100` | `err-overflow` | Arithmetic overflow |
+| `u101` | `err-divide-by-zero` | Division by zero |
+| `u102` | `err-underflow` | Arithmetic underflow |
+
+---
+
 ### `safe-add`
 ```clarity
 (define-read-only (safe-add (a uint) (b uint)) (response uint uint))
 ```
 Safe addition with overflow protection.
-- **Params**: `a` uint, `b` uint
-- **Returns**: `(ok uint)` or `(err u1)` on overflow
-- **Gas**: ~150
+- **Returns**: `(ok uint)` or `(err u100)` on overflow
+- **Example**: `(safe-add u100 u50)` → `(ok u150)`
 
 ### `safe-sub`
 ```clarity
 (define-read-only (safe-sub (a uint) (b uint)) (response uint uint))
 ```
 Safe subtraction, prevents underflow.
-- **Returns**: `(ok uint)` or `(err u2)` if b > a
+- **Returns**: `(ok uint)` or `(err u102)` if b > a
+- **Example**: `(safe-sub u100 u30)` → `(ok u70)`
 
 ### `safe-mul`
 ```clarity
 (define-read-only (safe-mul (a uint) (b uint)) (response uint uint))
 ```
-Safe multiplication with overflow check.
-- **Returns**: `(ok uint)` or `(err u1)` on overflow
+Safe multiplication with overflow check. Returns `(ok u0)` if a = 0.
+- **Returns**: `(ok uint)` or `(err u100)` on overflow
+
+### `safe-div`
+```clarity
+(define-read-only (safe-div (a uint) (b uint)) (response uint uint))
+```
+Safe division, prevents divide-by-zero.
+- **Returns**: `(ok uint)` or `(err u101)` if b = 0
 
 ### `percentage`
 ```clarity
@@ -35,6 +51,13 @@ Safe multiplication with overflow check.
 ```
 Calculates `amount * percent / 100`.
 - **Example**: `(percentage u1000 u5)` → `(ok u50)`
+
+### `basis-points`
+```clarity
+(define-read-only (basis-points (amount uint) (bps uint)) (response uint uint))
+```
+Calculates `amount * bps / 10000`. Useful for fee calculations (1 bps = 0.01%).
+- **Example**: `(basis-points u10000 u30)` → `(ok u30)` (0.3% fee)
 
 ### `min`
 ```clarity
@@ -48,38 +71,73 @@ Returns the smaller of two values.
 ```
 Returns the larger of two values.
 
----
-
-## toolkit-access.clar
-
-### `add-role`
+### `abs-diff`
 ```clarity
-(define-public (add-role (user principal) (role (string-ascii 20))) (response bool uint))
+(define-read-only (abs-diff (a uint) (b uint)) (response uint uint))
 ```
-Assigns a role to a principal. Contract owner only.
-- **Roles**: `"admin"`, `"minter"`, `"pauser"`, or custom
+Returns the absolute difference `|a - b|`.
+- **Example**: `(abs-diff u10 u15)` → `(ok u5)`
 
-### `remove-role`
+### `pow`
 ```clarity
-(define-public (remove-role (user principal)) (response bool uint))
+(define-read-only (pow (base uint) (exponent uint)) (response uint uint))
 ```
-Removes all roles from a principal.
+Raises `base` to the power of `exponent` using fast exponentiation.
+- **Returns**: `(ok u1)` if exponent = 0
+- **Example**: `(pow u2 u10)` → `(ok u1024)`
 
-### `has-role`
+### `average`
 ```clarity
-(define-read-only (has-role (user principal) (role (string-ascii 20))) bool)
+(define-read-only (average (a uint) (b uint)) (response uint uint))
 ```
-Checks if a principal has a specific role.
+Returns `(a + b) / 2`.
+- **Example**: `(average u10 u20)` → `(ok u15)`
 
-### `is-admin`
+### `is-even`
 ```clarity
-(define-read-only (is-admin (user principal)) bool)
+(define-read-only (is-even (n uint)) bool)
 ```
-Shorthand check for `"admin"` role.
+Returns `true` if n is even.
+
+### `is-odd`
+```clarity
+(define-read-only (is-odd (n uint)) bool)
+```
+Returns `true` if n is odd.
+
+### `clamp`
+```clarity
+(define-read-only (clamp (value uint) (min-val uint) (max-val uint)) (response uint uint))
+```
+Clamps value between min-val and max-val.
+- **Example**: `(clamp u150 u0 u100)` → `(ok u100)`
+
+### `lerp`
+```clarity
+(define-read-only (lerp (a uint) (b uint) (t uint)) (response uint uint))
+```
+Linear interpolation between a and b. `t` is in range [0, 100] (represents 0% to 100%).
+- **Returns**: `(err u100)` if t > 100
+- **Example**: `(lerp u0 u100 u50)` → `(ok u50)` (midpoint)
+
+### `arithmetic-sum`
+```clarity
+(define-read-only (arithmetic-sum (first uint) (last uint) (n uint)) (response uint uint))
+```
+Sum of arithmetic sequence: `n * (first + last) / 2`.
+- **Example**: `(arithmetic-sum u1 u10 u10)` → `(ok u55)`
 
 ---
 
 ## toolkit-tokens.clar
+
+### Error Codes
+| Code | Constant | Description |
+|------|----------|-------------|
+| `u200` | `err-invalid-amount` | Amount is zero |
+| `u201` | `err-length-mismatch` | Recipient/amount lists differ |
+| `u202` | `err-insufficient-balance` | Sender balance too low |
+| `u203` | `err-self-transfer` | Sender = recipient |
 
 ### `safe-transfer`
 ```clarity
@@ -89,8 +147,7 @@ Shorthand check for `"admin"` role.
   (recipient principal)
   (token-contract <ft-trait>)) (response bool uint))
 ```
-Validates amount > 0 before transferring.
-- **Errors**: `err-invalid-amount (u100)` if amount is 0
+Validates amount > 0 and sender ≠ recipient before transferring.
 
 ### `batch-transfer`
 ```clarity
@@ -99,65 +156,45 @@ Validates amount > 0 before transferring.
   (amounts (list 50 uint))
   (token-contract <ft-trait>)) (response bool uint))
 ```
-Transfers tokens to multiple recipients in one call.
-- **Errors**: `err-length-mismatch (u101)` if lists differ in length
+Transfers tokens to multiple recipients in one call. Lists must be equal length.
+
+### `get-balance-safe`
+```clarity
+(define-read-only (get-balance-safe
+  (who principal)
+  (token-contract <ft-trait>)) (response uint uint))
+```
+Returns token balance, defaults to `u0` if not found.
+
+### `has-balance`
+```clarity
+(define-read-only (has-balance
+  (who principal)
+  (amount uint)
+  (token-contract <ft-trait>)) (response bool uint))
+```
+Returns `(ok true)` if `who` holds at least `amount` tokens.
+
+---
+
+## toolkit-access.clar
+
+### `add-role` / `remove-role` / `has-role` / `is-admin`
+See README for full signatures. Roles are `(string-ascii 20)` — e.g. `"admin"`, `"minter"`, `"pauser"`.
 
 ---
 
 ## toolkit-validation.clar
 
-### `is-valid-address`
-```clarity
-(define-read-only (is-valid-address (addr principal)) bool)
-```
-Returns `true` if the principal is a standard address (not a contract).
-
-### `is-in-range`
-```clarity
-(define-read-only (is-in-range (value uint) (min uint) (max uint)) bool)
-```
-Returns `true` if `min <= value <= max`.
-
-### `is-valid-length`
-```clarity
-(define-read-only (is-valid-length (str (string-ascii 100)) (max-len uint)) bool)
-```
-Returns `true` if string length ≤ max-len.
-
-### `is-non-zero`
-```clarity
-(define-read-only (is-non-zero (value uint)) bool)
-```
-Returns `true` if value > 0.
+### `is-valid-address` / `is-in-range` / `is-valid-length` / `is-non-zero`
+See README for full signatures.
 
 ---
 
 ## toolkit-lists.clar
 
-### `sum-list`
-```clarity
-(define-read-only (sum-list (numbers (list 100 uint))) uint)
-```
-Returns the sum of all elements.
-- **Example**: `(sum-list (list u1 u2 u3))` → `u6`
-
-### `contains`
-```clarity
-(define-read-only (contains (item uint) (items (list 100 uint))) bool)
-```
-Returns `true` if item is present in the list.
-
----
-
-## Error Codes
-
-| Code | Constant | Description |
-|------|----------|-------------|
-| `u1` | `err-overflow` | Arithmetic overflow |
-| `u2` | `err-underflow` | Arithmetic underflow |
-| `u10` | `err-not-authorized` | Caller lacks permission |
-| `u100` | `err-invalid-amount` | Amount is zero or invalid |
-| `u101` | `err-length-mismatch` | List lengths don't match |
+### `sum-list` / `contains`
+See README for full signatures.
 
 ---
 
