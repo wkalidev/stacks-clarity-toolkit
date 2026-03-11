@@ -38,6 +38,14 @@ Safe subtraction, prevents underflow.
 Safe multiplication with overflow check. Returns `(ok u0)` if a = 0.
 - **Returns**: `(ok uint)` or `(err u100)` on overflow
 
+### `safe-mod`
+```clarity
+(define-read-only (safe-mod (a uint) (b uint)) (response uint uint))
+```
+Safe modulo with divide-by-zero protection.
+- **Returns**: `(ok uint)` or `(err u101)` if b = 0
+- **Example**: `(safe-mod u10 u3)` → `(ok u1)`
+
 ### `safe-div`
 ```clarity
 (define-read-only (safe-div (a uint) (b uint)) (response uint uint))
