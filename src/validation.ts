@@ -34,3 +34,10 @@ export function isNonZero(value: bigint): boolean {
 export function isValidProposalTitle(title: string): boolean {
   return title.length > 0 && title.length <= 100;
 }
+
+/**
+* Check if string contains only printable ASCII characters
+ */
+export function isPrintableAscii(str: string): boolean {
+  return /^[\x20-\x7E]*$/.test(str);
+}
