@@ -213,4 +213,8 @@ MIT License
 
 **Built for #StacksBuilderRewards 🏆 — wkalidev(zcodebase)**
 
-**Live platform: [base2stacks-tracker.vercel.app](https://base2stacks-tracker.vercel.app)**
+**Live platform: [base2stacks-tracker.vercel.app](https://base2stacks-tracker.vercel.app)**## Usage
+Import toolkit in your Clarity contracts:
+```clarity
+(define-constant TOOLKIT 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.toolkit-math)
+```
