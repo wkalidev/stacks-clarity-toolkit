@@ -132,3 +132,12 @@
 (define-read-only (arithmetic-sum (first uint) (last uint) (n uint))
   (ok (/ (* n (+ first last)) u2))
 )
+
+;; Ceiling Division
+;; Returns ceil(a / b)
+(define-read-only (ceil-div (a uint) (b uint))
+  (begin
+    (asserts! (> b u0) err-divide-by-zero)
+    (ok (/ (+ a (- b u1)) b))
+  )
+)
