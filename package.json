@@ -31,8 +31,9 @@
   },
   "homepage": "https://base2stacks-tracker.vercel.app",
   "dependencies": {
+    "@stacks/network": "^6.12.0",
     "@stacks/transactions": "^6.12.0",
-    "@stacks/network": "^6.12.0"
+    "@wkalidev/b2s-contracts": "^1.1.0"
   },
   "devDependencies": {
     "@hirosystems/clarinet-sdk": "^2.0.0",
