@@ -8,4 +8,5 @@ export * from './constants';
 export * from './access'
 export * from './blocks'
 export * from './encoding'
-export * from './testing'
+export { assertEq, assertGt, assertOk, assertErr, mockBlock } from './testing'
+
