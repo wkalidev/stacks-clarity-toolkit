@@ -1,27 +1,28 @@
 {
   "name": "@wkalidev/stacks-clarity-toolkit",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Essential utilities and helpers for Clarity smart contract development on Stacks",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types":   "./dist/index.d.ts",
+      "import":  "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist/", "README.md", "LICENSE"],
   "scripts": {
-    "build": "tsc",
-    "test": "clarinet check",
-    "check": "clarinet check",
-    "deploy:testnet": "clarinet deploy --testnet",
-    "deploy:mainnet": "clarinet deploy --mainnet"
+    "build":          "tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean",
+    "test":           "clarinet check",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "stacks",
-    "clarity",
-    "smart-contracts",
-    "utilities",
-    "helpers",
-    "blockchain",
-    "toolkit",
-    "defi",
-    "web3",
-    "sip-010"
+    "stacks", "clarity", "smart-contracts",
+    "utilities", "helpers", "blockchain",
+    "toolkit", "defi", "web3", "sip-010"
   ],
   "author": "wkalidev (zcodebase)",
   "license": "MIT",
@@ -31,12 +32,16 @@
   },
   "homepage": "https://base2stacks-tracker.vercel.app",
   "dependencies": {
-    "@stacks/network": "^6.12.0",
-    "@stacks/transactions": "^6.12.0",
-    "@wkalidev/b2s-contracts": "^1.1.0"
+    "@stacks/network":       "^7.3.1",
+    "@stacks/transactions":  "^7.3.1",
+    "@wkalidev/b2s-contracts": "^1.2.0"
   },
   "devDependencies": {
     "@hirosystems/clarinet-sdk": "^2.0.0",
+    "tsup":       "^8.0.0",
     "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "@stacks/transactions": ">=6.0.0"
   }
 }
