@@ -4,11 +4,17 @@
 ;; Traits
 (use-trait ft-trait 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 
+
+(define-constant max-batch-size u25)
+
 ;; Constants
 (define-constant err-invalid-amount (err u200))
 (define-constant err-length-mismatch (err u201))
 (define-constant err-insufficient-balance (err u202))
 (define-constant err-self-transfer (err u203))
+(define-constant err-duplicate-recipient (err u204))
+(define-constant err-too-many-transfers (err u205))
+
 
 ;; Safe Transfer
 ;; Validates amount > 0 and sender != recipient before calling transfer
@@ -37,12 +43,25 @@
   )
 )
 
+
+
 ;; Internal helper for batch-transfer
 (define-private (transfer-one (recipient principal) (amount uint))
   (if (> amount u0)
     (unwrap-panic (as-contract (stx-transfer? amount tx-sender recipient)))
     false
   )
+)
+
+(define-private (contains-recipient
+  (who principal)
+  (recipients (list 50 principal)))
+
+  (fold
+    (lambda (item found)
+      (or found (is-eq item who)))
+    recipients
+    false)
 )
 
 ;; Get Balance Safe
@@ -65,6 +84,37 @@
   (match (contract-call? token-contract get-balance who)
     balance (ok (>= balance amount))
     err (ok false)
+  )
+)
+
+;; Validate batch inputs before execution
+(define-read-only (validate-batch-transfer
+  (recipients (list 50 principal))
+  (amounts (list 50 uint)))
+
+  (begin
+    ;; Lengths must match
+    (asserts!
+      (is-eq (len recipients) (len amounts))
+      err-length-mismatch)
+
+    ;; Enforce safer batch limit
+    (asserts!
+      (<= (len recipients) max-batch-size)
+      err-too-many-transfers)
+
+    ;; Ensure all amounts > 0
+    (try!
+      (fold
+        (lambda (amount success)
+          (begin
+            (asserts! success err-invalid-amount)
+            (asserts! (> amount u0) err-invalid-amount)
+            (ok true)))
+        amounts
+        (ok true)))
+
+    (ok true)
   )
 )
 
