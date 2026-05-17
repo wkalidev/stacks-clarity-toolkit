@@ -18,6 +18,7 @@ If you're building on **Stacks**, you'll write the same helpers over and over �
 - ✅ **Zero config** — works out of the box with `@stacks/transactions` v7
 - ✅ **Clarity modules** — drop-in `.clar` contracts for common patterns
 - ✅ **Tested** — every utility verified against mainnet behavior
+- ✅ **Used in production** — powers [Base2Stacks DeFi](https://base2stacks-tracker.vercel.app)
 
 ---
 
@@ -52,10 +53,10 @@ clamp(50n, 0n, 100n)             // → 50n
 ```typescript
 import { isValidStacksAddress, isValidTxId, isPositive } from '@wkalidev/stacks-clarity-toolkit'
 
-isValidStacksAddress('SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96') // → true
-isValidStacksAddress('0x1234...')                                   // → false
-isValidTxId('0xabc123...')                                         // → true
-isPositive(100n)                                                    // → true
+isValidStacksAddress('SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N') // → true
+isValidStacksAddress('0x1234...')                                    // → false
+isValidTxId('0xabc123...')                                          // → true
+isPositive(100n)                                                     // → true
 ```
 
 ### Token Helpers
@@ -74,9 +75,9 @@ validateTransfer(100n, 'SP1...', 'SP2...') // throws if invalid
 ```typescript
 import { blocksToDays, daysToBlocks, estimateBlockTime } from '@wkalidev/stacks-clarity-toolkit'
 
-blocksToDays(144)          // → 1
-daysToBlocks(7)            // → 1008
-estimateBlockTime(100)     // → "~16h 40m"
+blocksToDays(144)        // → 1
+daysToBlocks(7)          // → 1008
+estimateBlockTime(100)   // → "~16h 40m"
 ```
 
 ### Access & Encoding
@@ -91,16 +92,14 @@ toHex(buffer)         // → "68656c6c6f"
 ### Testing Helpers
 
 ```typescript
-import { assertEq, assertOk, assertErr, assertGt, mockBlock, MOCK_PRINCIPALS, MOCK_AMOUNTS } from '@wkalidev/stacks-clarity-toolkit'
+import { assertEq, assertOk, assertErr, MOCK_PRINCIPALS, MOCK_AMOUNTS } from '@wkalidev/stacks-clarity-toolkit'
 
 assertEq(result, expected, 'should match')
-assertOk(contractResult)        // throws if { ok: false }
-assertErr(contractResult)       // throws if { ok: true }
-assertGt(100n, 50n)
+assertOk(contractResult)   // throws if { ok: false }
+assertErr(contractResult)  // throws if { ok: true }
 
-// Mock data for tests
-MOCK_PRINCIPALS.deployer        // → 'SP...'
-MOCK_AMOUNTS.small              // → 1_000_000n (1 token)
+MOCK_PRINCIPALS.deployer   // → 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N'
+MOCK_AMOUNTS.small         // → 1_000_000n (1 token)
 ```
 
 ---
@@ -112,15 +111,14 @@ Drop these into your Clarinet project:
 | Module | Description |
 |--------|-------------|
 | `toolkit-math.clar` | Safe arithmetic with overflow protection |
-| `toolkit-access.clar` | Role-based permissions (owner, admin, user) |
 | `toolkit-tokens.clar` | Safe SIP-010 transfer helpers |
-| `toolkit-validation.clar` | Input validation for principals & amounts |
 
 ### Example — toolkit-math.clar
 
 ```clarity
 (contract-call? .toolkit-math safe-add u100 u200)   ;; → (ok u300)
 (contract-call? .toolkit-math safe-div u100 u0)     ;; → (err u1) division by zero
+(contract-call? .toolkit-math basis-points u1000 u30) ;; → (ok u3) = 0.3%
 ```
 
 ---
@@ -163,4 +161,4 @@ MIT — © 2026 [wkalidev](https://github.com/wkalidev)
 
 ---
 
-**Built for [#StacksBuilderRewards](https://stacks.org) April 2026 🏆**
+**Built for [#StacksBuilderRewards](https://stacks.org) May 2026 🏆**
