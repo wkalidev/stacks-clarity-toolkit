@@ -1,7 +1,7 @@
-# Deployment Guide
+﻿# Deployment Guide
 
 ## Mainnet
-Contract: SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.toolkit-math
+Contract: SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N.toolkit-math
 
 ## Deploy your own instance
 clarinet deploy --mainnet

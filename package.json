@@ -34,7 +34,7 @@
   "dependencies": {
     "@stacks/network":       "^7.3.1",
     "@stacks/transactions":  "^7.3.1",
-    "@wkalidev/b2s-contracts": "^1.2.0"
+    "@wkalidev/b2s-contracts": "^1.3.1"
   },
   "devDependencies": {
     "@hirosystems/clarinet-sdk": "^2.0.0",

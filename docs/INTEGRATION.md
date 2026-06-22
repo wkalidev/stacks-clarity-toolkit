@@ -1,8 +1,8 @@
-# Integration Guide
+﻿# Integration Guide
 
 ## Add to your project
 (define-constant TOOLKIT
-  'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96.toolkit-math)
+  'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N.toolkit-math)
 
 ## Safe addition
 (define-public (add-tokens (a uint) (b uint))

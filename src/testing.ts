@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Testing utilities for Clarity contract development
  * Mock data, assertion helpers, and test principals
  */
 
 export const MOCK_PRINCIPALS = {
-  deployer: 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96',
+  deployer: 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N',
   wallet1:  'SP1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
   wallet2:  'SP2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG',
   wallet3:  'SP2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC',

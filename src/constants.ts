@@ -1,6 +1,6 @@
-// Stacks Clarity Toolkit - Constants
+﻿// Stacks Clarity Toolkit - Constants
 
-export const TOOLKIT_CONTRACT_ADDRESS = 'SP936YWJPST8GB8FFRCN7CC6P2YR5K6NNBAARQ96';
+export const TOOLKIT_CONTRACT_ADDRESS = 'SP1V72500C63KN9E348QDK9X879MASSTN0J3KBQ5N';
 
 export const CONTRACTS = {
   math:       `${TOOLKIT_CONTRACT_ADDRESS}.toolkit-math`,

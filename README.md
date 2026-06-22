@@ -136,12 +136,15 @@ clarinet test
 
 ---
 
-## Related Packages
+## Related Repos
 
-| Package | Description |
-|---------|-------------|
-| [@wkalidev/b2s-contracts](https://www.npmjs.com/package/@wkalidev/b2s-contracts) | $B2S token SDK & contract addresses |
-| [@wkalidev/b2s-sdk](https://www.npmjs.com/package/@wkalidev/b2s-sdk) | Ready-to-use DeFi clients |
+| Repo / Package | Description |
+|----------------|-------------|
+| [base2stacks-tracker](https://github.com/wkalidev/base2stacks-tracker) | Main DeFi platform — [live app](https://base2stacks-tracker.vercel.app) |
+| [b2s-token-contract](https://github.com/wkalidev/b2s-token-contract) | $B2S SDK & contract addresses — [@wkalidev/b2s-contracts](https://www.npmjs.com/package/@wkalidev/b2s-contracts) |
+| [b2s-analytics-dashboard](https://github.com/wkalidev/b2s-analytics-dashboard) | Analytics dashboard components |
+| [b2s-staking-interface](https://github.com/wkalidev/b2s-staking-interface) | Staking UI components |
+| [b2s-nft-badges](https://github.com/wkalidev/b2s-nft-badges) | 567 NFT badge assets and hooks |
 
 ---
 
